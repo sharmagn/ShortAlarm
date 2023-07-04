@@ -35,12 +35,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,30 +70,46 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShortAlarmScreen() {
-    var playEnabled = remember { mutableStateOf(true) }
-    var stopEnabled = remember { mutableStateOf(false) }
-    var remainingTime = remember { mutableStateOf("00:00") }
-    Column(modifier = Modifier.fillMaxHeight()) {
-        ShowText(remainingTime)
-        Spacer(modifier = Modifier.height(40.dp))
-        Row(horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-            ShowPlayButton(playEnabled,stopEnabled,remainingTime)
-            ShowStopButton(playEnabled, stopEnabled,remainingTime)
+    Scaffold(
+        topBar = {
+                 ShowTopBar()
+        },
+        content = {padding ->
+            var playEnabled = remember { mutableStateOf(true) }
+            var stopEnabled = remember { mutableStateOf(false) }
+            var remainingTime = remember { mutableStateOf("00:00") }
+            Column(modifier = Modifier.fillMaxHeight().padding(padding)) {
+                ShowText(remainingTime)
+                Spacer(modifier = Modifier.height(40.dp))
+                Row(horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                    ShowPlayButton(playEnabled,stopEnabled,remainingTime)
+                    ShowStopButton(playEnabled, stopEnabled,remainingTime)
+                }
+            }
         }
-    }
+    )
 }
 
-/*@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun ShowTopBar() {
     TopAppBar(
         title = {
-            Text(text = stringResource(R.string.app_name))
+            Text(text = stringResource(R.string.app_name),
+            fontStyle = FontStyle.Normal,
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 30.sp)
         },
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = Color.Cyan,
+            titleContentColor = Color.Blue
+        )
     )
-}*/
+}
 
 @Composable
 fun ShowText(timeRemaining: MutableState<String>) {
